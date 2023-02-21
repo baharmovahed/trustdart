@@ -20,7 +20,7 @@ class BSC : Coin("BSC", CoinType.SMARTCHAIN) {
         val signingInput = Ethereum.SigningInput.newBuilder()
         val wallet = HDWallet(mnemonic, passphrase)
         signingInput.apply {
-            contract = ByteString.copyFrom((txData["contract"] as String).toHexByteArray())
+            contract = ByteString.copyFrom((txData["contractAddress"] as String).toHexByteArray())
             privateKey = ByteString.copyFrom(wallet.getKey(coinType, path).data())
             toAddress = txData["toAddress"] as String
             chainId = ByteString.copyFrom((txData["chainID"] as String).toHexByteArray())
@@ -30,6 +30,7 @@ class BSC : Coin("BSC", CoinType.SMARTCHAIN) {
             transaction = Ethereum.Transaction.newBuilder().apply {
                 transfer = Ethereum.Transaction.Transfer.newBuilder().apply {
                     amount = ByteString.copyFrom((txData["amount"] as String).toHexByteArray())
+                    contractAddress = contract
                 }.build()
             }.build()
         }
